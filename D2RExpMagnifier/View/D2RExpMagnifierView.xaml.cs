@@ -33,5 +33,10 @@ namespace D2RExpMagnifier
         {
             viewModel.ViewLoaded();
         }
+
+        private void Grid_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            viewModel.GridClicked();
+        }
     }
 }

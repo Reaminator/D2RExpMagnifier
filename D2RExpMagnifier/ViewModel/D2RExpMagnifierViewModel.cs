@@ -30,19 +30,31 @@ namespace D2RExpMagnifier.UI.ViewModel
 
         public ResolutionPreset SelectedResolution { get; set; }
 
+        public bool KeepWindowTopMost { get; set; } = false;
+
         public D2RExpMagnifierViewModel()
         {
-            //ResolutionPresets.Add(new ResolutionPreset() { Name = "2560x1440", Left = 778, Right = 1770, Height = 1327 });
             ResolutionPresets.Add(new ResolutionPreset() { Name = "2560x1440", Left = 790, Right = 1770, Height = 1327, ForegroundCount = 900 });
             ResolutionPresets.Add(new ResolutionPreset() { Name = "1920x1080", Left = 596, Right = 1333, Height = 996, ForegroundCount = 672});
-            SelectedResolution = ResolutionPresets.First();
 
             TestButtonCommand = new DelegateCommand<object>(RefreshExp);
             ResetStatsCommand = new DelegateCommand<object>(ResetStats);
+            CloseApplicationCommand = new DelegateCommand<object>(CloseApplication);
             refreshTimer = new System.Timers.Timer(1000);
             refreshTimer.Elapsed += TimedRefresh;
             refreshTimer.Enabled = true;
             GetScreens();
+
+            SelectedResolution = null;
+
+            if (Screens.FirstOrDefault(p => p.Primary)?.Bounds.Width.ToString() is string screenWidth && !String.IsNullOrEmpty(screenWidth))
+            {
+                SelectedResolution = ResolutionPresets.Where(o => o.Name.StartsWith(screenWidth)).FirstOrDefault() ?? ResolutionPresets.First();
+            }
+            else
+            {
+                SelectedResolution = ResolutionPresets.First();
+            }
         }
 
         private void TimedRefresh(object source, ElapsedEventArgs e)
@@ -50,6 +62,23 @@ namespace D2RExpMagnifier.UI.ViewModel
             refreshTimer.Enabled = false;
             RefreshExp(null);
             refreshTimer.Enabled = true;
+        }
+
+        private bool uicompressed = false;
+
+        public bool UICompressed
+        {
+            get => uicompressed;
+            set
+            {
+                uicompressed = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        public void GridClicked()
+        {
+            UICompressed = !UICompressed;
         }
 
         private void GetScreens()
@@ -102,6 +131,8 @@ namespace D2RExpMagnifier.UI.ViewModel
         
         public DelegateCommand<object> TestButtonCommand { get; }
         public DelegateCommand<object> ResetStatsCommand { get; }
+
+        public DelegateCommand<object> CloseApplicationCommand { get; }
 
         public List<Screen> Screens { get; } = new List<Screen>();
 
@@ -183,19 +214,30 @@ namespace D2RExpMagnifier.UI.ViewModel
         public int Bar => ((int)(percentage / 10))+1;
 
         private double startPercentage = -999;
+
+        public double StartPercentage 
+        {
+            get => startPercentage;
+            set
+            {
+                startPercentage = value;
+                RaisePropertyChanged();
+            }
+        }
+
         private DateTime startTime = DateTime.Now;
 
         public TimeSpan TimeToLevel => CalculateTimeToLevel();
 
-        public TimeSpan TimeToBar => TimeSpan.FromHours((100 - BarPercentage) / (PercentPerHour * 10));
+        public TimeSpan TimeToBar => TimeSpan.FromHours((100 - BarPercentage) / (0.01+(PercentPerHour * 10)));
 
         private TimeSpan CalculateTimeToLevel()
         {
             TimeSpan returnValue = new TimeSpan(0, 0, 1);
             
-            if (Percentage > startPercentage)
+            if (Percentage > StartPercentage)
             {
-                double gain = Percentage - startPercentage;
+                double gain = Percentage - StartPercentage;
                 TimeSpan time = DateTime.Now - startTime;
 
                 returnValue = time*((100 - Percentage) / gain);
@@ -206,10 +248,15 @@ namespace D2RExpMagnifier.UI.ViewModel
 
         public double PercentPerHour => Math.Round( ((percentage - startPercentage) / (DateTime.Now - startTime).TotalHours)*10 )/10;
 
+        private void CloseApplication(object parameter)
+        {
+            System.Windows.Application.Current.Shutdown();
+        }
+
         private void ResetStats(object parameter)
         {
             startTime = DateTime.Now;
-            startPercentage = Percentage;
+            StartPercentage = Percentage;
             RaisePropertyChanged(nameof(TimeToLevel));
         }
 
@@ -225,7 +272,14 @@ namespace D2RExpMagnifier.UI.ViewModel
 
             string debugString = startNo + " " + endNo + " Count: ";
 
-
+            try
+            { 
+                System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                {
+                    System.Windows.Application.Current.MainWindow.Topmost = KeepWindowTopMost;
+                });
+            }
+            catch { }
 
             if (startX != null && endX != null)
             {
@@ -247,7 +301,7 @@ namespace D2RExpMagnifier.UI.ViewModel
             AddDebugText(debugString);
         }
 
-        private bool debugOn = true;
+        private bool debugOn = false;
 
         private void AddDebugText(string text)
         {

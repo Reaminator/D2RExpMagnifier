@@ -6,13 +6,16 @@
         xmlns:vc="clr-namespace:D2RExpMagnifier.UI.ValueConverter"
         xmlns:local="clr-namespace:D2RExpMagnifier"
         mc:Ignorable="d"
-        Title="MainWindow" Height="600" Width="600" Loaded="Window_Loaded">
+        Title="MainWindow" SizeToContent="WidthAndHeight" Loaded="Window_Loaded"
+        ResizeMode="NoResize">
     <Window.Resources>
         <vc:InputCoordinateConverter x:Key="InputCoordinateConverter"/>
         <vc:PercentageToBarConverter x:Key="PercentageToBarConverter"/>
         <vc:TimeToStringConverter x:Key="TimeToStringConverter"/>
+        <vc:UICompressedToHeightConverter x:Key="UICompressedToHeightConverter"/>
+        <vc:UICompressedToBackgroundConverter x:Key="UICompressedToBackgroundConverter"/>
     </Window.Resources>
-    <Grid>
+    <Grid Width="400">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -21,11 +24,14 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Border Grid.Row="0" BorderBrush="Black" BorderThickness="1" Margin="1">
-            <TextBlock Text="Diablo 2 Resurrected EXP Magnifier" FontSize="16" FontWeight="Bold"/>
+        <Border Grid.Row="0" BorderBrush="Black" BorderThickness="1" Margin="1" Visibility="{Binding UICompressed, Converter={StaticResource UICompressedToHeightConverter}}">
+            <Grid>
+                <TextBlock Text="Diablo 2 Resurrected EXP Magnifier" FontSize="16" FontWeight="Bold"/>
+                <!--<Button HorizontalAlignment="Right" Content="X" Width="20" Command="{Binding CloseApplicationCommand}"/>-->
+            </Grid>
         </Border>
 
-        <Border Grid.Row="1" BorderBrush="Black" BorderThickness="1" Margin="1">
+        <Border Grid.Row="1" BorderBrush="Black" BorderThickness="1" Margin="1" Visibility="{Binding UICompressed, Converter={StaticResource UICompressedToHeightConverter}}">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -43,7 +49,6 @@
 
                 <StackPanel Grid.Row="0" Orientation="Horizontal">
                     <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Margin="2" Text="Setup" FontWeight="Bold"/>
-                    <Button Content="Configure" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="2" HorizontalAlignment="Stretch"/>
                 </StackPanel>
 
                 <TextBlock Grid.Row="1" Grid.Column="0" Margin="2" Text="Screen/Display"/>
@@ -70,14 +75,15 @@
                 <TextBox Grid.Row="3" Grid.Column="1" Margin="2" Width="75" Text="{Binding RightBarX, Converter={StaticResource InputCoordinateConverter}}" HorizontalAlignment="Stretch"/>
                 <TextBox Grid.Row="3" Grid.Column="2" Margin="2" Width="75" Text="{Binding RightBarY, Converter={StaticResource InputCoordinateConverter}}" HorizontalAlignment="Left"/>-->
 
-                <CheckBox Grid.Row="4" Content="Bar exp OSD" Margin="2"/>
+                <CheckBox Grid.Row="4" Content="Keep topmost" IsChecked="{Binding Path=KeepWindowTopMost}" Margin="2"/>
             </Grid>
         </Border>
 
-        <Border Grid.Row="2" BorderBrush="Black" BorderThickness="1" Margin="1">
+        <Border Grid.Row="2" BorderBrush="Black" BorderThickness="1" Margin="1" Visibility="{Binding UICompressed, Converter={StaticResource UICompressedToHeightConverter}}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
@@ -99,6 +105,7 @@
 
                 <TextBlock Grid.Column="0" Grid.Row="1" Text="Exp%" Margin="2" HorizontalAlignment="Right"/>
                 <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding Percentage, Mode=OneWay}" Margin="2" IsEnabled="False"/>
+                <TextBox Grid.Column="2" Grid.Row="1" Text="{Binding StartPercentage, Mode=OneWay}" Margin="2" IsEnabled="False"/>
 
                 <TextBlock Grid.Column="0" Grid.Row="2" Text="Bar" Margin="2" HorizontalAlignment="Right"/>
                 <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding Bar, Mode=OneWay}" Margin="2" IsEnabled="False"/>
@@ -131,10 +138,10 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <TextBlock Grid.Row="0" Margin="2" Text="Gauges" FontWeight="Bold"/>
+                <TextBlock Grid.Row="0" Margin="2" Text="Gauges" FontWeight="Bold" Visibility="{Binding UICompressed, Converter={StaticResource UICompressedToHeightConverter}}"/>
 
                 <Border Grid.Row="1" BorderBrush="Black" BorderThickness="1" Height="25" Margin="2">
-                    <Grid>
+                    <Grid MouseDown="Grid_MouseDown">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="{Binding Percentage, Mode=OneWay, Converter={StaticResource PercentageToBarConverter}, ConverterParameter='Foreground'}"/>
                             <ColumnDefinition Width="{Binding Percentage, Mode=OneWay, Converter={StaticResource PercentageToBarConverter}, ConverterParameter='Background'}"/>
@@ -146,10 +153,17 @@
                 </Border>
                 <TextBlock Grid.Row="1" Text="Level" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5"/>
                 <TextBlock Grid.Row="1" Text="{Binding Percentage, Mode=OneWay}" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"/>
-                <TextBlock Grid.Row="1" Text="11h 18m" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="5"/>
+
+                <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <TextBlock Text="{Binding TimeToLevel, Mode=OneWay, Converter={StaticResource TimeToStringConverter}, ConverterParameter='H'}" VerticalAlignment="Center" Margin="2"/>
+                    <TextBlock Text="h" VerticalAlignment="Center" Margin="2"/>
+                    <TextBlock Text="{Binding TimeToLevel, Mode=OneWay, Converter={StaticResource TimeToStringConverter}, ConverterParameter='M'}" VerticalAlignment="Center" Margin="2"/>
+                    <TextBlock Text=" m" VerticalAlignment="Center" Margin="2 2 5 2"/>
+                </StackPanel>
+               
 
                 <Border Grid.Row="2" BorderBrush="Black" BorderThickness="1" Height="25" Margin="2">
-                    <Grid>
+                    <Grid MouseDown="Grid_MouseDown">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="{Binding BarPercentage, Mode=OneWay, Converter={StaticResource PercentageToBarConverter}, ConverterParameter='Foreground'}"/>
                             <ColumnDefinition Width="{Binding BarPercentage, Mode=OneWay, Converter={StaticResource PercentageToBarConverter}, ConverterParameter='Background'}"/>
@@ -161,11 +175,16 @@
                 </Border>
                 <TextBlock Grid.Row="2" Text="Bar" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5"/>
                 <TextBlock Grid.Row="2" Text="{Binding BarPercentage, Mode=OneWay}" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"/>
-                <TextBlock Grid.Row="2" Text="2h 27m" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="5"/>
+                <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <TextBlock Text="{Binding TimeToBar, Mode=OneWay, Converter={StaticResource TimeToStringConverter}, ConverterParameter='H'}" VerticalAlignment="Center" Margin="2"/>
+                    <TextBlock Text="h" VerticalAlignment="Center" Margin="2"/>
+                    <TextBlock Text="{Binding TimeToBar, Mode=OneWay, Converter={StaticResource TimeToStringConverter}, ConverterParameter='M'}" VerticalAlignment="Center" Margin="2"/>
+                    <TextBlock Text=" m" VerticalAlignment="Center" Margin="2 2 5 2"/>
+                </StackPanel>
             </Grid>
         </Border>
 
-        <Border Grid.Row="4" BorderBrush="Black" BorderThickness="1" Margin="1">
+        <Border Grid.Row="4" BorderBrush="Black" BorderThickness="1" Margin="1" Visibility="{Binding UICompressed, Converter={StaticResource UICompressedToHeightConverter}}">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
