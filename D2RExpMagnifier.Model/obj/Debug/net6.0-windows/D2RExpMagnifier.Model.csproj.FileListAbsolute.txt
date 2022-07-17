@@ -1,0 +1,12 @@
+D:\src\D2RExpMagnifier\D2RExpMagnifier.Model\bin\Debug\net6.0-windows\D2RExpMagnifier.Model.deps.json
+D:\src\D2RExpMagnifier\D2RExpMagnifier.Model\bin\Debug\net6.0-windows\D2RExpMagnifier.Model.dll
+D:\src\D2RExpMagnifier\D2RExpMagnifier.Model\bin\Debug\net6.0-windows\D2RExpMagnifier.Model.pdb
+D:\src\D2RExpMagnifier\D2RExpMagnifier.Model\obj\Debug\net6.0-windows\D2RExpMagnifier.Model.csproj.AssemblyReference.cache
+D:\src\D2RExpMagnifier\D2RExpMagnifier.Model\obj\Debug\net6.0-windows\D2RExpMagnifier.Model.GeneratedMSBuildEditorConfig.editorconfig
+D:\src\D2RExpMagnifier\D2RExpMagnifier.Model\obj\Debug\net6.0-windows\D2RExpMagnifier.Model.AssemblyInfoInputs.cache
+D:\src\D2RExpMagnifier\D2RExpMagnifier.Model\obj\Debug\net6.0-windows\D2RExpMagnifier.Model.AssemblyInfo.cs
+D:\src\D2RExpMagnifier\D2RExpMagnifier.Model\obj\Debug\net6.0-windows\D2RExpMagnifier.Model.csproj.CoreCompileInputs.cache
+D:\src\D2RExpMagnifier\D2RExpMagnifier.Model\obj\Debug\net6.0-windows\D2RExpMagnifier.Model.dll
+D:\src\D2RExpMagnifier\D2RExpMagnifier.Model\obj\Debug\net6.0-windows\refint\D2RExpMagnifier.Model.dll
+D:\src\D2RExpMagnifier\D2RExpMagnifier.Model\obj\Debug\net6.0-windows\D2RExpMagnifier.Model.pdb
+D:\src\D2RExpMagnifier\D2RExpMagnifier.Model\obj\Debug\net6.0-windows\ref\D2RExpMagnifier.Model.dll

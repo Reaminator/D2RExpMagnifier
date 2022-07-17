@@ -1,0 +1,145 @@
+﻿<Window x:Class="D2RExpMagnifier.D2RExpMagnifierView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:D2RExpMagnifier"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="600">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" BorderBrush="Black" BorderThickness="1" Margin="1">
+            <TextBlock Text="Diablo 2 Resurrected EXP Magnifier"/>
+        </Border>
+
+        <Border Grid.Row="1" BorderBrush="Black" BorderThickness="1" Margin="1">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Row="0" Orientation="Horizontal">
+                    <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Margin="2" Text="Setup" FontWeight="Bold"/>
+                    <Button Content="Configure" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="2" HorizontalAlignment="Stretch"/>
+                </StackPanel>
+                
+
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="Left bar coordinates" Margin="2" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                <TextBox Grid.Row="1" Grid.Column="1" Margin="2" Width="75" Text="54" IsEnabled="False" HorizontalAlignment="Stretch"/>
+                <TextBox Grid.Row="1" Grid.Column="2" Margin="2" Width="75" Text="982" IsEnabled="False" HorizontalAlignment="Left"/>
+
+                <TextBlock Grid.Row="2" Grid.Column="0" Text="Right bar coordinates" Margin="2" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                <TextBox Grid.Row="2" Grid.Column="1" Margin="2" Width="75" Text="1662" IsEnabled="False" HorizontalAlignment="Stretch"/>
+                <TextBox Grid.Row="2" Grid.Column="2" Margin="2" Width="75" Text="982" IsEnabled="False" HorizontalAlignment="Left"/>
+
+                <CheckBox Grid.Row="3" Content="Bar exp OSD" Margin="2"/>
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="2" BorderBrush="Black" BorderThickness="1" Margin="1">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <StackPanel Grid.Row="0" Orientation="Horizontal">
+                    <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Margin="2" Text="Statistics" FontWeight="Bold"/>
+                    <Button Content="Reset" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="2" HorizontalAlignment="Stretch"/>
+                </StackPanel>
+
+                <TextBlock Grid.Column="0" Grid.Row="1" Text="Exp%" Margin="2" HorizontalAlignment="Right"/>
+                <TextBox Grid.Column="1" Grid.Row="1" Text="74.46" Margin="2" IsEnabled="False"/>
+
+                <TextBlock Grid.Column="0" Grid.Row="2" Text="Bar" Margin="2" HorizontalAlignment="Right"/>
+                <TextBox Grid.Column="1" Grid.Row="2" Text="8" Margin="2" IsEnabled="False"/>
+
+                <TextBlock Grid.Column="0" Grid.Row="3" Text="Bar%" Margin="2" HorizontalAlignment="Right"/>
+                <TextBox Grid.Column="1" Grid.Row="3" Text="44.68" Margin="2" IsEnabled="False"/>
+
+                <TextBlock Grid.Column="0" Grid.Row="4" Text="Exp%/Hour" Margin="2" HorizontalAlignment="Right"/>
+                <TextBox Grid.Column="1" Grid.Row="4" Text="2.26" Margin="2" IsEnabled="False"/>
+
+                <TextBlock Grid.Column="0" Grid.Row="5" Text="Time to level (Hours/Minutes)" Margin="2" HorizontalAlignment="Right"/>
+                <StackPanel Grid.Column="1" Grid.Row="5" Orientation="Horizontal">
+                    <TextBox Width="50" Text="11" Margin="2" IsEnabled="False"/>
+                    <TextBox Width="50" Text="18" Margin="2" IsEnabled="False"/>
+                </StackPanel>
+
+                <TextBlock Grid.Column="0" Grid.Row="6" Text="Time to next bar" Margin="2" HorizontalAlignment="Right"/>
+                <StackPanel Grid.Column="1" Grid.Row="6" Orientation="Horizontal">
+                    <TextBox Width="50" Text="2" Margin="2" IsEnabled="False"/>
+                    <TextBox Width="50" Text="27" Margin="2" IsEnabled="False"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="3" BorderBrush="Black" BorderThickness="1" Margin="1">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" Margin="2" Text="Gauges" FontWeight="Bold"/>
+
+                <Border Grid.Row="1" BorderBrush="Black" BorderThickness="1" Height="25" Margin="2">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="74.46*"/>
+                            <ColumnDefinition Width="25.54*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Border Grid.Column="0" Background="Green"/>
+                        <Border Grid.Column="1" Background="LightGray"/>
+                    </Grid>
+                </Border>
+                <TextBlock Grid.Row="1" Text="Level" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5"/>
+                <TextBlock Grid.Row="1" Text="74.46" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"/>
+                <TextBlock Grid.Row="1" Text="11h 18m" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="5"/>
+
+                <Border Grid.Row="2" BorderBrush="Black" BorderThickness="1" Height="25" Margin="2">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="44.68*"/>
+                            <ColumnDefinition Width="55.32*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Border Grid.Column="0" Background="Green"/>
+                        <Border Grid.Column="1" Background="LightGray"/>
+                    </Grid>
+                </Border>
+                <TextBlock Grid.Row="2" Text="Bar" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5"/>
+                <TextBlock Grid.Row="2" Text="44.68" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"/>
+                <TextBlock Grid.Row="2" Text="2h 27m" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="5"/>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>
