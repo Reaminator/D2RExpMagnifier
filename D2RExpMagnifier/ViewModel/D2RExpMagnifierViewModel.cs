@@ -32,8 +32,9 @@ namespace D2RExpMagnifier.UI.ViewModel
 
         public D2RExpMagnifierViewModel()
         {
-            ResolutionPresets.Add(new ResolutionPreset() { Name = "2560x1440", Left = 778, Right = 1770, Height = 1327 });
-            ResolutionPresets.Add(new ResolutionPreset() { Name = "1920x1080", Left = 589, Right = 1325, Height = 994 });
+            //ResolutionPresets.Add(new ResolutionPreset() { Name = "2560x1440", Left = 778, Right = 1770, Height = 1327 });
+            ResolutionPresets.Add(new ResolutionPreset() { Name = "2560x1440", Left = 790, Right = 1770, Height = 1327, ForegroundCount = 900 });
+            ResolutionPresets.Add(new ResolutionPreset() { Name = "1920x1080", Left = 596, Right = 1333, Height = 996, ForegroundCount = 672});
             SelectedResolution = ResolutionPresets.First();
 
             TestButtonCommand = new DelegateCommand<object>(RefreshExp);
@@ -115,7 +116,7 @@ namespace D2RExpMagnifier.UI.ViewModel
 
         private bool IsExpBackground(Color color)
         {
-            return ((int)color.R + (int)color.G + (int)color.B) < 40;
+            return ((int)color.R + (int)color.G + (int)color.B) < 65;
         }
 
         private int? GetLeftBound()
@@ -145,7 +146,7 @@ namespace D2RExpMagnifier.UI.ViewModel
             int? returnValue = null;
             bool foundBar = false;
 
-            List<Color> getCheckPixels = GetColorsBetween((int)SelectedResolution.Right, (int)SelectedResolution.Right + 100, (int)SelectedResolution.Left);
+            List<Color> getCheckPixels = GetColorsBetween((int)SelectedResolution.Right, (int)SelectedResolution.Right + 100, (int)SelectedResolution.Height);
 
             foreach (Color color in getCheckPixels)
             {
@@ -219,6 +220,13 @@ namespace D2RExpMagnifier.UI.ViewModel
 
             int foregroundCount = 0;
 
+            string startNo = startX != null ? startX.ToString() : "Start not found";
+            string endNo = endX != null ? endX.ToString() : "End not found";
+
+            string debugString = startNo + " " + endNo + " Count: ";
+
+
+
             if (startX != null && endX != null)
             {
                 if (startPercentage == -999)
@@ -229,21 +237,31 @@ namespace D2RExpMagnifier.UI.ViewModel
 
                 List<Color> getCheckPixels = GetColorsBetween((int)startX, (int)endX, (int)SelectedResolution.Height);
                 foregroundCount = getCheckPixels.Where(o => IsExpForeground(o)).Count();
-                double calculatedPercentage = Math.Round( ((double)foregroundCount / 900) * 1000*100)/1000;
+                debugString += foregroundCount.ToString();
+                
+                double calculatedPercentage = Math.Round( ((double)foregroundCount / SelectedResolution.ForegroundCount) * 1000*100)/1000;
 
                 if (calculatedPercentage > startPercentage) Percentage = calculatedPercentage;
             }
+
+            AddDebugText(debugString);
         }
+
+        private bool debugOn = true;
 
         private void AddDebugText(string text)
         {
-            debugText.Insert(0,
+            if(debugOn)
+            {
+                debugText.Insert(0,
                String.Format(
                    "{0}: {1}",
                    DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
                     text));
 
-            RaisePropertyChanged(nameof(DebugText));
+                RaisePropertyChanged(nameof(DebugText));
+            }
+
         }
 
         private List<string> debugText = new List<string>();

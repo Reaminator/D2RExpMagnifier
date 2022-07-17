@@ -5,7 +5,7 @@ VisualStudioVersion = 17.2.32630.192
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "D2RExpMagnifier.UI", "D2RExpMagnifier\D2RExpMagnifier.UI.csproj", "{5CFD2470-1935-4AFD-BC58-95DBD4BA2461}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "D2RExpMagnifier.Model", "D2RExpMagnifier.Model\D2RExpMagnifier.Model.csproj", "{116E8A64-9B87-4CC0-BA42-915DF0EECFCE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "D2RExpMagnifier.Model", "D2RExpMagnifier.Model\D2RExpMagnifier.Model.csproj", "{116E8A64-9B87-4CC0-BA42-915DF0EECFCE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

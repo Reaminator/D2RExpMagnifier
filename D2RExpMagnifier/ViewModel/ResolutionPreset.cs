@@ -12,5 +12,7 @@ namespace D2RExpMagnifier.UI.ViewModel
         public double Left { get; set; }
         public double Right { get; set; }
         public double Height { get; set; }
+
+        public double ForegroundCount { get; set; }
     }
 }
