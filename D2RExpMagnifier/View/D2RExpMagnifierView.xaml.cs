@@ -1,4 +1,5 @@
-﻿using System;
+﻿using D2RExpMagnifier.UI.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,9 +21,17 @@ namespace D2RExpMagnifier
     /// </summary>
     public partial class D2RExpMagnifierView : Window
     {
+        D2RExpMagnifierViewModel viewModel;
         public D2RExpMagnifierView()
         {
+            viewModel = new D2RExpMagnifierViewModel();
+            DataContext = viewModel;
             InitializeComponent();
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            viewModel.ViewLoaded();
         }
     }
 }
