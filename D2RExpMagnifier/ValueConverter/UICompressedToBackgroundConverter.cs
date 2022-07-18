@@ -12,13 +12,16 @@ namespace D2RExpMagnifier.UI.ValueConverter
 {
     public class UICompressedToBackgroundConverter : IValueConverter
     {
+        private UICompressedToBackgroundConverter() { }
+        static UICompressedToBackgroundConverter() { }
+
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            Brush returnValue = Brushes.White;
+            WindowStyle returnValue = WindowStyle.SingleBorderWindow;
 
             if (value is bool boolValue && boolValue)
             {
-                returnValue = Brushes.Transparent;
+                returnValue = WindowStyle.None;
             }
 
             return returnValue;
@@ -28,5 +31,7 @@ namespace D2RExpMagnifier.UI.ValueConverter
         {
             throw new NotImplementedException();
         }
+
+        public static UICompressedToBackgroundConverter Instance { get; } = new UICompressedToBackgroundConverter();
     }
 }

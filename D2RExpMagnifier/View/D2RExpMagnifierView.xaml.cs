@@ -36,7 +36,14 @@ namespace D2RExpMagnifier
 
         private void Grid_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            viewModel.GridClicked();
+            if (e.ChangedButton == MouseButton.Left && e.ClickCount == 2)
+            {
+                viewModel.GridClicked();
+            }
+            else
+            {
+                this.DragMove();
+            }
         }
     }
 }

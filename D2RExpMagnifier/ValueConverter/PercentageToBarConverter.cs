@@ -18,7 +18,7 @@ namespace D2RExpMagnifier.UI.ValueConverter
             {
                 if (value is double doubleValue)
                 {
-                    returnValue = stringParameter == "Foreground" ? String.Format("{0}*", ((int)doubleValue).ToString()) : String.Format("{0}*", ((int)(100-doubleValue)).ToString());
+                    returnValue = stringParameter == "Foreground" ? String.Format("{0}*", ((int)(doubleValue*10)).ToString()) : String.Format("{0}*", ((int)((100-doubleValue)*10)).ToString());
                 }
             }
 

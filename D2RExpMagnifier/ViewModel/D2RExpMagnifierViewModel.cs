@@ -40,6 +40,12 @@ namespace D2RExpMagnifier.UI.ViewModel
             TestButtonCommand = new DelegateCommand<object>(RefreshExp);
             ResetStatsCommand = new DelegateCommand<object>(ResetStats);
             CloseApplicationCommand = new DelegateCommand<object>(CloseApplication);
+
+            ShrinkWidthCommand = new DelegateCommand<object>(ShrinkWidth);
+            ExpandWidthCommand = new DelegateCommand<object>(ExpandWidth);
+
+            ResetBarPercentageCommand = new DelegateCommand<object>(ResetBarPercentage);
+
             refreshTimer = new System.Timers.Timer(1000);
             refreshTimer.Elapsed += TimedRefresh;
             refreshTimer.Enabled = true;
@@ -132,6 +138,24 @@ namespace D2RExpMagnifier.UI.ViewModel
         public DelegateCommand<object> TestButtonCommand { get; }
         public DelegateCommand<object> ResetStatsCommand { get; }
 
+        public DelegateCommand<object> ResetBarPercentageCommand { get; }
+        public DelegateCommand<object> ShrinkWidthCommand { get; }
+        public DelegateCommand<object> ExpandWidthCommand { get; }
+
+        private List<Double> windowWidths = new List<Double> { 200, 300, 400, 600, 800, 1000, 1200 };
+
+        private double selectedWidth = 400;
+
+        public double SelectedWidth 
+        {
+            get => selectedWidth;
+            set
+            {
+                selectedWidth = value;
+                RaisePropertyChanged();
+            }
+        }
+
         public DelegateCommand<object> CloseApplicationCommand { get; }
 
         public List<Screen> Screens { get; } = new List<Screen>();
@@ -206,6 +230,8 @@ namespace D2RExpMagnifier.UI.ViewModel
                 RaisePropertyChanged(nameof(TimeToLevel));
                 RaisePropertyChanged(nameof(PercentPerHour));
                 RaisePropertyChanged(nameof(TimeToBar));
+                RaisePropertyChanged(nameof(AddedPercentage));
+                RaisePropertyChanged(nameof(AddedBarPercentage));
             }
         }
 
@@ -213,7 +239,9 @@ namespace D2RExpMagnifier.UI.ViewModel
 
         public int Bar => ((int)(percentage / 10))+1;
 
-        private double startPercentage = -999;
+        private double startPercentage = 0;
+
+        public double AddedPercentage => Math.Round((Percentage - StartPercentage)*100)/100;
 
         public double StartPercentage 
         {
@@ -222,6 +250,22 @@ namespace D2RExpMagnifier.UI.ViewModel
             {
                 startPercentage = value;
                 RaisePropertyChanged();
+                RaisePropertyChanged(nameof(AddedPercentage));
+            }
+        }
+
+        private double startBarPercentage = 0;
+
+        public double AddedBarPercentage => Math.Round((BarPercentage - StartBarPercentage)*100)/100;
+
+        public double StartBarPercentage
+        {
+            get => startBarPercentage;
+            set
+            {
+                startBarPercentage = value;
+                RaisePropertyChanged();
+                RaisePropertyChanged(nameof(AddedBarPercentage));
             }
         }
 
@@ -253,11 +297,33 @@ namespace D2RExpMagnifier.UI.ViewModel
             System.Windows.Application.Current.Shutdown();
         }
 
+        private void ShrinkWidth(object parameter)
+        {
+            if(windowWidths.IndexOf(SelectedWidth) > 0)
+            {
+                SelectedWidth = windowWidths[windowWidths.IndexOf(SelectedWidth) - 1];
+            }
+        }
+
+        private void ExpandWidth(object parameter)
+        {
+            if (windowWidths.IndexOf(SelectedWidth) < windowWidths.Count-1)
+            {
+                SelectedWidth = windowWidths[windowWidths.IndexOf(SelectedWidth) + 1];
+            }
+        }
+
         private void ResetStats(object parameter)
         {
             startTime = DateTime.Now;
             StartPercentage = Percentage;
+            StartBarPercentage = BarPercentage;
             RaisePropertyChanged(nameof(TimeToLevel));
+        }
+
+        private void ResetBarPercentage(object parameter)
+        {
+            StartBarPercentage = BarPercentage;;
         }
 
         private void RefreshExp(object parameter)

@@ -7,15 +7,15 @@
         xmlns:local="clr-namespace:D2RExpMagnifier"
         mc:Ignorable="d"
         Title="MainWindow" SizeToContent="WidthAndHeight" Loaded="Window_Loaded"
-        ResizeMode="NoResize">
+        ResizeMode="NoResize"
+        WindowStyle="{Binding UICompressed, Converter={x:Static vc:UICompressedToBackgroundConverter.Instance}}">
     <Window.Resources>
         <vc:InputCoordinateConverter x:Key="InputCoordinateConverter"/>
         <vc:PercentageToBarConverter x:Key="PercentageToBarConverter"/>
         <vc:TimeToStringConverter x:Key="TimeToStringConverter"/>
         <vc:UICompressedToHeightConverter x:Key="UICompressedToHeightConverter"/>
-        <vc:UICompressedToBackgroundConverter x:Key="UICompressedToBackgroundConverter"/>
     </Window.Resources>
-    <Grid Width="400">
+    <Grid Width="{Binding Path=SelectedWidth}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -141,41 +141,72 @@
                 <TextBlock Grid.Row="0" Margin="2" Text="Gauges" FontWeight="Bold" Visibility="{Binding UICompressed, Converter={StaticResource UICompressedToHeightConverter}}"/>
 
                 <Border Grid.Row="1" BorderBrush="Black" BorderThickness="1" Height="25" Margin="2">
-                    <Grid MouseDown="Grid_MouseDown">
+                    <Grid MouseDown="Grid_MouseDown" >
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="{Binding Percentage, Mode=OneWay, Converter={StaticResource PercentageToBarConverter}, ConverterParameter='Foreground'}"/>
+                            <ColumnDefinition Width="{Binding StartPercentage, Mode=OneWay, Converter={StaticResource PercentageToBarConverter}, ConverterParameter='Foreground'}"/>
+                            <ColumnDefinition Width="{Binding AddedPercentage, Mode=OneWay, Converter={StaticResource PercentageToBarConverter}, ConverterParameter='Foreground'}"/>
                             <ColumnDefinition Width="{Binding Percentage, Mode=OneWay, Converter={StaticResource PercentageToBarConverter}, ConverterParameter='Background'}"/>
                         </Grid.ColumnDefinitions>
 
                         <Border Grid.Column="0" Background="Green"/>
-                        <Border Grid.Column="1" Background="LightGray"/>
+                        <Border Grid.Column="1" Background="LightGreen"/>
+                        <Border Grid.Column="2" Background="LightGray"/>
                     </Grid>
                 </Border>
-                <TextBlock Grid.Row="1" Text="Level" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5"/>
-                <TextBlock Grid.Row="1" Text="{Binding Percentage, Mode=OneWay}" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"/>
+                <StackPanel Grid.Row="1" HorizontalAlignment="Left" Orientation="Horizontal">
+                    <Button Content="" Width="12" Height="12" Margin="5" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Command="{Binding ShrinkWidthCommand}"/>
+                    <TextBlock Text="Level" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5"/>
+                </StackPanel>
+
+                <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
+                    <TextBlock Text="{Binding Percentage, Mode=OneWay}" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"/>
+                    <TextBlock Text="%" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"/>
+
+                    <TextBlock Text="  (+ " HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <TextBlock Text="{Binding AddedPercentage, Mode=OneWay}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <TextBlock Text=" %)" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+
+                    <TextBlock Text="  (" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <TextBlock Text="{Binding PercentPerHour, Mode=OneWay}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <TextBlock Text=" %/h)" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </StackPanel>
+
 
                 <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Margin="5" Height="12" Width="12" Background="Green" Content="" HorizontalContentAlignment="Center" VerticalContentAlignment="Top" HorizontalAlignment="Stretch" Command="{Binding Path=ResetStatsCommand}"/>
                     <TextBlock Text="{Binding TimeToLevel, Mode=OneWay, Converter={StaticResource TimeToStringConverter}, ConverterParameter='H'}" VerticalAlignment="Center" Margin="2"/>
                     <TextBlock Text="h" VerticalAlignment="Center" Margin="2"/>
                     <TextBlock Text="{Binding TimeToLevel, Mode=OneWay, Converter={StaticResource TimeToStringConverter}, ConverterParameter='M'}" VerticalAlignment="Center" Margin="2"/>
                     <TextBlock Text=" m" VerticalAlignment="Center" Margin="2 2 5 2"/>
+                    <Button Content="" Width="12" Height="12" Margin="5" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Command="{Binding ExpandWidthCommand}"/>
                 </StackPanel>
                
 
                 <Border Grid.Row="2" BorderBrush="Black" BorderThickness="1" Height="25" Margin="2">
                     <Grid MouseDown="Grid_MouseDown">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="{Binding BarPercentage, Mode=OneWay, Converter={StaticResource PercentageToBarConverter}, ConverterParameter='Foreground'}"/>
+                            <ColumnDefinition Width="{Binding StartBarPercentage, Mode=OneWay, Converter={StaticResource PercentageToBarConverter}, ConverterParameter='Foreground'}"/>
+                            <ColumnDefinition Width="{Binding AddedBarPercentage, Mode=OneWay, Converter={StaticResource PercentageToBarConverter}, ConverterParameter='Foreground'}"/>
                             <ColumnDefinition Width="{Binding BarPercentage, Mode=OneWay, Converter={StaticResource PercentageToBarConverter}, ConverterParameter='Background'}"/>
                         </Grid.ColumnDefinitions>
 
                         <Border Grid.Column="0" Background="Green"/>
-                        <Border Grid.Column="1" Background="LightGray"/>
+                        <Border Grid.Column="1" Background="LightGreen"/>
+                        <Border Grid.Column="2" Background="LightGray"/>
                     </Grid>
                 </Border>
                 <TextBlock Grid.Row="2" Text="Bar" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5"/>
-                <TextBlock Grid.Row="2" Text="{Binding BarPercentage, Mode=OneWay}" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"/>
+
+                <StackPanel Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Horizontal">
+                    <TextBlock Text="{Binding BarPercentage, Mode=OneWay}" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"/>
+                    <TextBlock Text="%" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"/>
+                    <TextBlock Text="  (+ " HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <TextBlock Text="{Binding AddedBarPercentage, Mode=OneWay}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <TextBlock Text=" %)" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </StackPanel>
+
                 <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Margin="5" Height="12" Width="12" Background="Green" Content="" HorizontalContentAlignment="Center" VerticalContentAlignment="Top" HorizontalAlignment="Stretch" Command="{Binding Path=ResetBarPercentageCommand}"/>
                     <TextBlock Text="{Binding TimeToBar, Mode=OneWay, Converter={StaticResource TimeToStringConverter}, ConverterParameter='H'}" VerticalAlignment="Center" Margin="2"/>
                     <TextBlock Text="h" VerticalAlignment="Center" Margin="2"/>
                     <TextBlock Text="{Binding TimeToBar, Mode=OneWay, Converter={StaticResource TimeToStringConverter}, ConverterParameter='M'}" VerticalAlignment="Center" Margin="2"/>
