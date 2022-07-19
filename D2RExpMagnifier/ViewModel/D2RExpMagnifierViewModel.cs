@@ -32,7 +32,6 @@ namespace D2RExpMagnifier.UI.ViewModel
             ShrinkWidthCommand = new DelegateCommand<object>(ShrinkWidth);
             ExpandWidthCommand = new DelegateCommand<object>(ExpandWidth);
             ResetBarPercentageCommand = new DelegateCommand<object>(ResetBarPercentage);
-
             refreshTimer = new System.Timers.Timer(1000);
             refreshTimer.Elapsed += TimedRefresh;
             refreshTimer.Enabled = true;
@@ -83,6 +82,7 @@ namespace D2RExpMagnifier.UI.ViewModel
         public void ViewLoaded()
         {
             RefreshAllProperties();
+            WindowMode = false;
         }
 
         //UI Private methods
