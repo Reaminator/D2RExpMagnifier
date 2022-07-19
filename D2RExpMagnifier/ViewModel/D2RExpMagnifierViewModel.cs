@@ -29,10 +29,8 @@ namespace D2RExpMagnifier.UI.ViewModel
             TestButtonCommand = new DelegateCommand<object>(RefreshExp);
             ResetStatsCommand = new DelegateCommand<object>(ResetStats);
             CloseApplicationCommand = new DelegateCommand<object>(CloseApplication);
-
             ShrinkWidthCommand = new DelegateCommand<object>(ShrinkWidth);
             ExpandWidthCommand = new DelegateCommand<object>(ExpandWidth);
-
             ResetBarPercentageCommand = new DelegateCommand<object>(ResetBarPercentage);
 
             refreshTimer = new System.Timers.Timer(1000);
@@ -106,8 +104,12 @@ namespace D2RExpMagnifier.UI.ViewModel
             refreshTimer.Enabled = true;
         }
 
+        public bool Status => Model.Status;
+
         private void RefreshAllProperties()
         {
+            RaisePropertyChanged(nameof(Status));
+            RaisePropertyChanged(nameof(WindowMode));
             RaisePropertyChanged(nameof(Screens));
             RaisePropertyChanged(nameof(SelectedScreen));
             RaisePropertyChanged(nameof(ResolutionPresets));
@@ -182,6 +184,16 @@ namespace D2RExpMagnifier.UI.ViewModel
         public TimeSpan TimeToBar => Model.TimeToBar;
         public double PercentPerHour => Model.PercentPerHour;
         public string DebugText => Model.DebugText;
+
+        public bool WindowMode
+        {
+            get => Model.WindowMode;
+            set
+            {
+                Model.WindowMode = value;
+                RaisePropertyChanged();
+            }
+        }
 
         //UI Relayed Methods
         private void ResetStats(object parameter)

@@ -4,11 +4,45 @@ using System.Linq;
 using System.Windows.Forms;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
+using System.Threading;
 
 namespace D2RExpMagnifier.Model
 {
     public class ExpTracker
     {
+        [DllImport("user32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        static extern bool GetWindowRect(IntPtr hWnd, ref RECT lpRect);
+        [StructLayout(LayoutKind.Sequential)]
+        private struct RECT
+        {
+            public int Left;
+            public int Top;
+            public int Right;
+            public int Bottom;
+        }
+
+        [DllImport("User32.Dll")]
+        public static extern long SetCursorPos(int x, int y);
+
+        [DllImport("User32.Dll")]
+        public static extern bool ClientToScreen(IntPtr hWnd, ref POINT point);
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct POINT
+        {
+            public int x;
+            public int y;
+
+            public POINT(int X, int Y)
+            {
+                x = X;
+                y = Y;
+            }
+        }
+
         public ExpTracker() 
         {
             ResolutionPresets.Add(new ResolutionPreset() { Name = "2560x1440", Left = 790, Right = 1770, Height = 1327, ForegroundCount = 900 });
@@ -26,7 +60,7 @@ namespace D2RExpMagnifier.Model
             }
         }
 
-        public double StartPercentage { get; set; } = 0;
+        public double StartPercentage { get; set; } = -1;
         public double StartBarPercentage { get; set; } = 0;
 
         public double Percentage { get; set; } = 0;
@@ -61,6 +95,8 @@ namespace D2RExpMagnifier.Model
 
         public void ResetStats()
         {
+            Percentage = 0;
+            RefreshExp();
             startTime = DateTime.Now;
             StartPercentage = Percentage;
             StartBarPercentage = BarPercentage;
@@ -71,6 +107,11 @@ namespace D2RExpMagnifier.Model
             StartBarPercentage = BarPercentage;
         }
 
+        public bool WindowMode { get; set; } = false;
+
+
+        private int lastbar = 0;
+        private int expResetCounter = 0;
 
         public void RefreshExp()
         {
@@ -78,6 +119,8 @@ namespace D2RExpMagnifier.Model
             int? endX = GetRightBound();
 
             int foregroundCount = 0;
+            int backgroundCount = 0;
+            int unknownCount = 0;
 
             string startNo = startX != null ? startX.ToString() : "Start not found";
             string endNo = endX != null ? endX.ToString() : "End not found";
@@ -86,19 +129,46 @@ namespace D2RExpMagnifier.Model
 
             if (startX != null && endX != null)
             {
-                if (StartPercentage == -999)
-                {
-                    StartPercentage = Percentage;
-                    startTime = DateTime.Now;
-                }
-
                 List<Color> getCheckPixels = GetColorsBetween((int)startX, (int)endX, (int)SelectedResolution.Height);
                 foregroundCount = getCheckPixels.Where(o => IsExpForeground(o)).Count();
+                backgroundCount = getCheckPixels.Where(o => IsExpBackground(o)).Count();
                 debugString += foregroundCount.ToString();
 
                 double calculatedPercentage = Math.Round(((double)foregroundCount / SelectedResolution.ForegroundCount) * 1000 * 100) / 1000;
+                unknownCount = getCheckPixels.Count - (foregroundCount + backgroundCount);
 
-                Percentage = calculatedPercentage;
+                if(unknownCount < 75)
+                {
+                    Status = true;
+
+                    if (StartPercentage == -1) ResetStats();
+
+                    if (Bar != lastbar) ResetBarPercentage();
+                    lastbar = Bar;
+
+                    if (calculatedPercentage < Percentage)
+                    {
+                        expResetCounter++;
+                    }
+                    else
+                    {
+                        Percentage = calculatedPercentage;
+                        expResetCounter = 0;
+                    }
+
+                    if (expResetCounter > 5)
+                    {
+                        Percentage = calculatedPercentage;
+                    }
+                }
+                else
+                {
+                    Status = false;
+                }
+            }
+            else
+            {
+                Status = false;
             }
 
             AddDebugText(debugString);
@@ -124,16 +194,37 @@ namespace D2RExpMagnifier.Model
             SelectedScreen = Screens.FirstOrDefault();
         }
 
+        public bool Status { get; set; } = false;
+
         private List<Color> GetColorsBetween(int startx, int endx, int y)
         {
             List<Color> returnValue = new List<Color>();
+
+            int xOffset = 0;
+            int yOffset = 0;
+
+            if(WindowMode)
+            {
+                Process[] processes = Process.GetProcessesByName("D2R");
+
+                if (processes.FirstOrDefault()?.MainWindowHandle is IntPtr d2rHandle)
+                {
+                    RECT windowPos = new RECT();
+
+                    if (GetWindowRect(d2rHandle, ref windowPos))
+                    {
+                        xOffset = windowPos.Left + 10;
+                        yOffset = windowPos.Top + 33;
+                    }
+                }
+            }
 
             try
             {
                 Bitmap bitmap = new Bitmap(endx - startx, 1, PixelFormat.Format32bppArgb);
                 Graphics destination = Graphics.FromImage(bitmap);
 
-                destination.CopyFromScreen(startx, y, 0, 0, new Size(endx - startx, 1), CopyPixelOperation.SourceCopy);
+                destination.CopyFromScreen(xOffset+startx, yOffset+y, 0, 0, new Size(endx - startx, 1), CopyPixelOperation.SourceCopy);
 
                 for (int i = 0; i < (endx - startx); i++)
                 {
@@ -155,7 +246,11 @@ namespace D2RExpMagnifier.Model
 
             foreach (Color color in getCheckPixels)
             {
-                if (IsExpForeground(color) || IsExpBackground(color)) foundBar = true;
+                if (IsExpForeground(color) || IsExpBackground(color))
+                {
+                    foundBar = true;
+                }
+                else if (!foundBar) break;
 
                 if (foundBar && !IsExpBackground(color) && !IsExpForeground(color))
                 {
@@ -176,7 +271,11 @@ namespace D2RExpMagnifier.Model
 
             foreach (Color color in getCheckPixels)
             {
-                if (IsExpForeground(color) || IsExpBackground(color)) foundBar = true;
+                if (IsExpForeground(color) || IsExpBackground(color))
+                {
+                    foundBar = true;
+                }
+                else if (!foundBar) break;
 
                 if (foundBar && !IsExpBackground(color) && !IsExpForeground(color))
                 {
