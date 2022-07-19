@@ -55,7 +55,7 @@ namespace D2RExpMagnifier {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/D2RExpMagnifier.UI;V1.0.0.0;component/view/d2rexpmagnifierview.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/D2RExpMagnifier.UI;component/view/d2rexpmagnifierview.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\..\View\D2RExpMagnifierView.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);
