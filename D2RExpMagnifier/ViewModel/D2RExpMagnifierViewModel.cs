@@ -20,9 +20,7 @@ namespace D2RExpMagnifier.UI.ViewModel
 {
     public class D2RExpMagnifierViewModel : INotifyPropertyChanged
     {
-        private System.Timers.Timer refreshTimer;
-
-        public bool KeepWindowTopMost { get; set; } = false;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         public ExpTracker Model { get; } = new ExpTracker();
 
@@ -42,6 +40,55 @@ namespace D2RExpMagnifier.UI.ViewModel
             refreshTimer.Enabled = true;
         }
 
+        //UI Fields
+        private bool uicompressed = false;
+        private System.Timers.Timer refreshTimer;
+        private List<Double> windowWidths = new List<Double> { 200, 300, 400, 600, 800, 1000, 1200 };
+        private double selectedWidth = 400;
+
+        //UI Properties
+        public DelegateCommand<object> TestButtonCommand { get; }
+        public DelegateCommand<object> ResetStatsCommand { get; }
+        public DelegateCommand<object> ResetBarPercentageCommand { get; }
+        public DelegateCommand<object> ShrinkWidthCommand { get; }
+        public DelegateCommand<object> ExpandWidthCommand { get; }
+        public DelegateCommand<object> CloseApplicationCommand { get; }
+
+        public bool KeepWindowTopMost { get; set; } = false;
+
+        public bool UICompressed
+        {
+            get => uicompressed;
+            set
+            {
+                uicompressed = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        public double SelectedWidth
+        {
+            get => selectedWidth;
+            set
+            {
+                selectedWidth = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        //UI Public methods
+        public void GridClicked()
+        {
+            UICompressed = !UICompressed;
+        }
+
+        public void ViewLoaded()
+        {
+            RefreshAllProperties();
+        }
+
+        //UI Private methods
+
         private void TimedRefresh(object source, ElapsedEventArgs e)
         {
             try
@@ -57,79 +104,6 @@ namespace D2RExpMagnifier.UI.ViewModel
             Model.RefreshExp();
             RefreshAllProperties();
             refreshTimer.Enabled = true;
-        }
-
-        private bool uicompressed = false;
-
-        public ResolutionPreset SelectedResolution
-        {
-            get => Model.SelectedResolution;
-            set
-            {
-                Model.SelectedResolution = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        public bool UICompressed
-        {
-            get => uicompressed;
-            set
-            {
-                uicompressed = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        public void GridClicked()
-        {
-            UICompressed = !UICompressed;
-        }
-
-
-        public Screen? SelectedScreen 
-        {
-            get => Model.SelectedScreen;
-            set
-            {
-                Model.SelectedScreen = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        public List<ResolutionPreset> ResolutionPresets => Model.ResolutionPresets;
-
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-        
-        public DelegateCommand<object> TestButtonCommand { get; }
-        public DelegateCommand<object> ResetStatsCommand { get; }
-
-        public DelegateCommand<object> ResetBarPercentageCommand { get; }
-        public DelegateCommand<object> ShrinkWidthCommand { get; }
-        public DelegateCommand<object> ExpandWidthCommand { get; }
-
-        private List<Double> windowWidths = new List<Double> { 200, 300, 400, 600, 800, 1000, 1200 };
-
-        private double selectedWidth = 400;
-
-        public double SelectedWidth 
-        {
-            get => selectedWidth;
-            set
-            {
-                selectedWidth = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        public DelegateCommand<object> CloseApplicationCommand { get; }
-
-
-
-        public void ViewLoaded()
-        {
-            RefreshAllProperties();
         }
 
         private void RefreshAllProperties()
@@ -150,27 +124,6 @@ namespace D2RExpMagnifier.UI.ViewModel
             RaisePropertyChanged(nameof(StartPercentage));
             RaisePropertyChanged(nameof(StartBarPercentage));
         }
-        public double Percentage => Model.Percentage;
-
-        public double BarPercentage => Model.BarPercentage;
-
-        public int Bar => Model.Bar;
-
-        public double AddedPercentage => Model.AddedPercentage;
-
-        public List<Screen> Screens => Model.Screens;
-
-        public double StartPercentage => Model.StartPercentage;
-
-        public double AddedBarPercentage => Model.AddedBarPercentage;
-
-        public double StartBarPercentage => Model.StartBarPercentage;
-
-        public TimeSpan TimeToLevel => Model.TimeToLevel;
-
-        public TimeSpan TimeToBar => Model.TimeToBar;
-
-        public double PercentPerHour => Model.PercentPerHour;
 
         private void CloseApplication(object parameter)
         {
@@ -179,7 +132,7 @@ namespace D2RExpMagnifier.UI.ViewModel
 
         private void ShrinkWidth(object parameter)
         {
-            if(windowWidths.IndexOf(SelectedWidth) > 0)
+            if (windowWidths.IndexOf(SelectedWidth) > 0)
             {
                 SelectedWidth = windowWidths[windowWidths.IndexOf(SelectedWidth) - 1];
             }
@@ -187,12 +140,50 @@ namespace D2RExpMagnifier.UI.ViewModel
 
         private void ExpandWidth(object parameter)
         {
-            if (windowWidths.IndexOf(SelectedWidth) < windowWidths.Count-1)
+            if (windowWidths.IndexOf(SelectedWidth) < windowWidths.Count - 1)
             {
                 SelectedWidth = windowWidths[windowWidths.IndexOf(SelectedWidth) + 1];
             }
         }
 
+        private void RaisePropertyChanged([CallerMemberName] string memberName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(memberName));
+
+        //Model properties
+        public ResolutionPreset SelectedResolution
+        {
+            get => Model.SelectedResolution;
+            set
+            {
+                Model.SelectedResolution = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        public Screen? SelectedScreen 
+        {
+            get => Model.SelectedScreen;
+            set
+            {
+                Model.SelectedScreen = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        public List<ResolutionPreset> ResolutionPresets => Model.ResolutionPresets;
+        public double Percentage => Model.Percentage;
+        public double BarPercentage => Model.BarPercentage;
+        public int Bar => Model.Bar;
+        public double AddedPercentage => Model.AddedPercentage;
+        public List<Screen> Screens => Model.Screens;
+        public double StartPercentage => Model.StartPercentage;
+        public double AddedBarPercentage => Model.AddedBarPercentage;
+        public double StartBarPercentage => Model.StartBarPercentage;
+        public TimeSpan TimeToLevel => Model.TimeToLevel;
+        public TimeSpan TimeToBar => Model.TimeToBar;
+        public double PercentPerHour => Model.PercentPerHour;
+        public string DebugText => Model.DebugText;
+
+        //UI Relayed Methods
         private void ResetStats(object parameter)
         {
             Model.ResetStats();
@@ -216,9 +207,5 @@ namespace D2RExpMagnifier.UI.ViewModel
             Model.AddDebugText(text);
             RaisePropertyChanged(nameof(DebugText));
         }
-
-        public string DebugText => Model.DebugText;
-
-        private void RaisePropertyChanged([CallerMemberName] string memberName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(memberName));
     }
 }
