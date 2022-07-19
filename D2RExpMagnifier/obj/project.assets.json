@@ -1376,6 +1376,19 @@
             "rid": "win"
           }
         }
+      },
+      "D2RExpMagnifier.Model/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v6.0",
+        "compile": {
+          "bin/placeholder/D2RExpMagnifier.Model.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/D2RExpMagnifier.Model.dll": {}
+        },
+        "frameworkReferences": [
+          "Microsoft.WindowsDesktop.App"
+        ]
       }
     }
   },
@@ -4554,10 +4567,16 @@
         "useSharedDesignerContext.txt",
         "version.txt"
       ]
+    },
+    "D2RExpMagnifier.Model/1.0.0": {
+      "type": "project",
+      "path": "../D2RExpMagnifier.Model/D2RExpMagnifier.Model.csproj",
+      "msbuildProject": "../D2RExpMagnifier.Model/D2RExpMagnifier.Model.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net6.0-windows7.0": [
+      "D2RExpMagnifier.Model >= 1.0.0",
       "Microsoft.VisualStudio.Utilities >= 17.2.32505.113",
       "Prism.Core >= 8.1.97"
     ]
@@ -4588,7 +4607,11 @@
       "frameworks": {
         "net6.0-windows7.0": {
           "targetAlias": "net6.0-windows",
-          "projectReferences": {}
+          "projectReferences": {
+            "D:\\src\\D2RExpMagnifier\\D2RExpMagnifier.Model\\D2RExpMagnifier.Model.csproj": {
+              "projectPath": "D:\\src\\D2RExpMagnifier\\D2RExpMagnifier.Model\\D2RExpMagnifier.Model.csproj"
+            }
+          }
         }
       },
       "warningProperties": {

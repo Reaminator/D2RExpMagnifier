@@ -126,3 +126,5 @@ D:\src\D2RExpMagnifier\D2RExpMagnifier\obj\Debug\net6.0-windows\refint\D2RExpMag
 D:\src\D2RExpMagnifier\D2RExpMagnifier\obj\Debug\net6.0-windows\D2RExpMagnifier.UI.pdb
 D:\src\D2RExpMagnifier\D2RExpMagnifier\obj\Debug\net6.0-windows\D2RExpMagnifier.UI.genruntimeconfig.cache
 D:\src\D2RExpMagnifier\D2RExpMagnifier\obj\Debug\net6.0-windows\ref\D2RExpMagnifier.UI.dll
+D:\src\D2RExpMagnifier\D2RExpMagnifier\bin\Debug\net6.0-windows\D2RExpMagnifier.Model.dll
+D:\src\D2RExpMagnifier\D2RExpMagnifier\bin\Debug\net6.0-windows\D2RExpMagnifier.Model.pdb

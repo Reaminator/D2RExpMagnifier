@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace D2RExpMagnifier.UI.ViewModel
+namespace D2RExpMagnifier.Model
 {
     public class ResolutionPreset
     {
