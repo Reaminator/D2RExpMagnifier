@@ -32,9 +32,10 @@ namespace D2RExpMagnifier.UI.ViewModel
             ShrinkWidthCommand = new DelegateCommand<object>(ShrinkWidth);
             ExpandWidthCommand = new DelegateCommand<object>(ExpandWidth);
             ResetBarPercentageCommand = new DelegateCommand<object>(ResetBarPercentage);
-            refreshTimer = new System.Timers.Timer(1000);
-            refreshTimer.Elapsed += TimedRefresh;
-            refreshTimer.Enabled = true;
+            TestLeftCoordCommand = new DelegateCommand<object>(TestLeftCoord);
+            TestRightCoordCommand = new DelegateCommand<object>(TestRightCoord);
+            TestWindowLeftOffsetCommand = new DelegateCommand<object>(TestWindowLeftOffset);
+            TestWindowTopOffsetCommand = new DelegateCommand<object>(TestWindowTopOffset);
         }
 
         //UI Fields
@@ -50,6 +51,10 @@ namespace D2RExpMagnifier.UI.ViewModel
         public DelegateCommand<object> ShrinkWidthCommand { get; }
         public DelegateCommand<object> ExpandWidthCommand { get; }
         public DelegateCommand<object> CloseApplicationCommand { get; }
+        public DelegateCommand<object> TestLeftCoordCommand { get; }
+        public DelegateCommand<object> TestRightCoordCommand { get; }
+        public DelegateCommand<object> TestWindowLeftOffsetCommand { get; }
+        public DelegateCommand<object> TestWindowTopOffsetCommand { get; }
 
         public bool KeepWindowTopMost { get; set; } = false;
 
@@ -82,26 +87,28 @@ namespace D2RExpMagnifier.UI.ViewModel
         public void ViewLoaded()
         {
             RefreshAllProperties();
-            WindowMode = false;
+            RaisePropertyChanged(nameof(SelectedResolution));
+            refreshTimer = new System.Timers.Timer(1000);
+            refreshTimer.Elapsed += TimedRefresh;
+            refreshTimer.Enabled = true;
         }
 
         //UI Private methods
 
         private void TimedRefresh(object source, ElapsedEventArgs e)
         {
+            refreshTimer.Enabled = false;
+
             try
             {
                 System.Windows.Application.Current.Dispatcher.Invoke(() =>
                 {
+                    Model.RefreshExp();
+                    RefreshAllProperties();
                     System.Windows.Application.Current.MainWindow.Topmost = KeepWindowTopMost;
                 });
             }
-            catch { }
-
-            refreshTimer.Enabled = false;
-            Model.RefreshExp();
-            RefreshAllProperties();
-            refreshTimer.Enabled = true;
+            finally { refreshTimer.Enabled = true; }
         }
 
         public bool Status => Model.Status;
@@ -109,11 +116,9 @@ namespace D2RExpMagnifier.UI.ViewModel
         private void RefreshAllProperties()
         {
             RaisePropertyChanged(nameof(Status));
-            RaisePropertyChanged(nameof(WindowMode));
             RaisePropertyChanged(nameof(Screens));
             RaisePropertyChanged(nameof(SelectedScreen));
             RaisePropertyChanged(nameof(ResolutionPresets));
-            RaisePropertyChanged(nameof(SelectedResolution));
             RaisePropertyChanged(nameof(Percentage));
             RaisePropertyChanged(nameof(BarPercentage));
             RaisePropertyChanged(nameof(Bar));
@@ -185,16 +190,6 @@ namespace D2RExpMagnifier.UI.ViewModel
         public double PercentPerHour => Model.PercentPerHour;
         public string DebugText => Model.DebugText;
 
-        public bool WindowMode
-        {
-            get => Model.WindowMode;
-            set
-            {
-                Model.WindowMode = value;
-                RaisePropertyChanged();
-            }
-        }
-
         //UI Relayed Methods
         private void ResetStats(object parameter)
         {
@@ -207,6 +202,11 @@ namespace D2RExpMagnifier.UI.ViewModel
             Model.ResetBarPercentage();
             RefreshAllProperties();
         }
+
+        private void TestLeftCoord(object parameter) => Model.TestLeftCoord();
+        private void TestRightCoord(object parameter) => Model.TestRightCoord();
+        private void TestWindowLeftOffset(object parameter) => Model.TestWindowLeftOffset();
+        private void TestWindowTopOffset(object parameter) => Model.TestWindowTopOffset();
 
         private void RefreshExp(object parameter)
         {

@@ -66,9 +66,64 @@
                     </ComboBox.ItemTemplate>
                 </ComboBox>
 
+                <TextBlock Grid.Row="2" Grid.Column="0" Margin="2" Text="Resolution preset"/>
                 <ComboBox Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" ItemsSource="{Binding ResolutionPresets}" SelectedItem="{Binding SelectedResolution}" DisplayMemberPath="Name"/>
 
-                <CheckBox Grid.Row="3" Grid.Column="1" Content="Window mode" Margin="2" IsChecked="{Binding Path=WindowMode}"/>
+                <Border BorderBrush="Black" BorderThickness="1" Margin="2" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Grid.Row="0" Grid.Column="0" Margin="2" Text="Coord. Left"/>
+                        <TextBox Grid.Row="0" Grid.Column="1" Margin="2" Text="{Binding Path=SelectedResolution.Left}"/>
+                        <Button Grid.Row="0" Grid.Column="3" Margin="2" Content="Test" Command="{Binding TestLeftCoordCommand}"/>
+
+                        <TextBlock Grid.Row="1" Grid.Column="0" Margin="2" Text="Coord. Right"/>
+                        <TextBox Grid.Row="1" Grid.Column="1" Margin="2" Text="{Binding Path=SelectedResolution.Right}"/>
+                        <Button Grid.Row="1" Grid.Column="3" Margin="2" Content="Test" Command="{Binding TestRightCoordCommand}"/>
+
+                        <TextBlock Grid.Row="2" Grid.Column="0" Margin="2" Text="Coord. Height"/>
+                        <TextBox Grid.Row="2" Grid.Column="1" Margin="2" Text="{Binding Path=SelectedResolution.Height}"/>
+
+                        <TextBlock Grid.Row="3" Grid.Column="0" Margin="2" Text="Window Mode"/>
+                        <CheckBox Grid.Row="3" Grid.Column="1" Margin="2" IsChecked="{Binding Path=SelectedResolution.WindowMode}"/>
+
+                        <TextBlock Grid.Row="4" Grid.Column="0" Margin="2" Text="WindowMode X offset"/>
+                        <TextBox Grid.Row="4" Grid.Column="1" Margin="2" Text="{Binding Path=SelectedResolution.WindowModeXOffset}"/>
+                        <!--<Button Grid.Row="4" Grid.Column="3" Margin="2" Content="Test" Command="{Binding TestWindowLeftOffsetCommand}"/>-->
+
+                        <TextBlock Grid.Row="5" Grid.Column="0" Margin="2" Text="WindowMode Y offset"/>
+                        <TextBox Grid.Row="5" Grid.Column="1" Margin="2" Text="{Binding Path=SelectedResolution.WindowModeYOffset}"/>
+                        <!--<Button Grid.Row="5" Grid.Column="3" Margin="2" Content="Test" Command="{Binding TestWindowTopOffsetCommand}"/>-->
+
+                        <TextBlock Grid.Row="6" Grid.Column="0" Margin="2" Text="Exp.Foreground brightness"/>
+                        <TextBox Grid.Row="6" Grid.Column="1" Margin="2" Text="{Binding Path=SelectedResolution.ExpForegroundBrightness}"/>
+
+                        <TextBlock Grid.Row="7" Grid.Column="0" Margin="2" Text="Exp.Background brightness"/>
+                        <TextBox Grid.Row="7" Grid.Column="1" Margin="2" Text="{Binding Path=SelectedResolution.ExpBackgroundBrightness}"/>
+
+                        <TextBlock Grid.Row="8" Grid.Column="0" Margin="2" Text="Exp.Foreground count"/>
+                        <TextBox Grid.Row="8" Grid.Column="1" Margin="2" Text="{Binding Path=SelectedResolution.ForegroundCount}"/>
+                    </Grid>
+
+
+                </Border>
 
                 <!--<TextBlock Grid.Row="2" Grid.Column="0" Text="Left bar coordinates" Margin="2" HorizontalAlignment="Right" VerticalAlignment="Center"/>
                 <TextBox Grid.Row="2" Grid.Column="1" Margin="2" Width="75" Text="{Binding Path=LeftBarX, Converter={StaticResource InputCoordinateConverter}}" HorizontalAlignment="Stretch"/>

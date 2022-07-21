@@ -45,8 +45,7 @@ namespace D2RExpMagnifier.Model
 
         public ExpTracker() 
         {
-            ResolutionPresets.Add(new ResolutionPreset() { Name = "2560x1440", Left = 790, Right = 1770, Height = 1327, ForegroundCount = 900 });
-            ResolutionPresets.Add(new ResolutionPreset() { Name = "1920x1080", Left = 596, Right = 1333, Height = 996, ForegroundCount = 672 });
+            AddPresets();
 
             GetScreens();
 
@@ -60,8 +59,127 @@ namespace D2RExpMagnifier.Model
             }
         }
 
-        public double StartPercentage { get; set; } = -1;
-        public double StartBarPercentage { get; set; } = 0;
+
+        private void AddPresets()
+        {
+            ResolutionPresets.Add(new ResolutionPreset()
+            {
+                Name = "2560x1440_Full_Medium",
+                Left = 790,
+                Right = 1770,
+                Height = 1327,
+                ForegroundCount = 900,
+                WindowMode = false,
+                WindowModeXOffset = 0,
+                WindowModeYOffset = 0,
+                ExpForegroundBrightness = 720,
+                ExpBackgroundBrightness = 45
+            });
+
+            ResolutionPresets.Add(new ResolutionPreset()
+            {
+                Name = "2560x1440_Full_Bright",
+                Left = 790,
+                Right = 1770,
+                Height = 1327,
+                ForegroundCount = 900,
+                WindowMode = false,
+                WindowModeXOffset = 0,
+                WindowModeYOffset = 0,
+                ExpForegroundBrightness = 720,
+                ExpBackgroundBrightness = 65
+            });
+
+            ResolutionPresets.Add(new ResolutionPreset()
+            {
+                Name = "2560x1440_Window_Medium",
+                Left = 790,
+                Right = 1770,
+                Height = 1327,
+                ForegroundCount = 900,
+                WindowMode = true,
+                WindowModeXOffset = 10,
+                WindowModeYOffset = 33,
+                ExpForegroundBrightness = 720,
+                ExpBackgroundBrightness = 45
+            });
+
+            ResolutionPresets.Add(new ResolutionPreset()
+            {
+                Name = "2560x1440_Window_Bright",
+                Left = 790,
+                Right = 1770,
+                Height = 1327,
+                ForegroundCount = 900,
+                WindowMode = true,
+                WindowModeXOffset = 10,
+                WindowModeYOffset = 33,
+                ExpForegroundBrightness = 720,
+                ExpBackgroundBrightness = 65
+            });
+
+            ResolutionPresets.Add(new ResolutionPreset()
+            {
+                Name = "1920x1080_Full_Medium",
+                Left = 596,
+                Right = 1333,
+                Height = 996,
+                ForegroundCount = 672,
+                WindowMode = false,
+                WindowModeXOffset = 0,
+                WindowModeYOffset = 0,
+                ExpForegroundBrightness = 720,
+                ExpBackgroundBrightness = 45
+            });
+
+            ResolutionPresets.Add(new ResolutionPreset()
+            {
+                Name = "1920x1080_Full_Bright",
+                Left = 596,
+                Right = 1333,
+                Height = 996,
+                ForegroundCount = 672,
+                WindowMode = false,
+                WindowModeXOffset = 0,
+                WindowModeYOffset = 0,
+                ExpForegroundBrightness = 720,
+                ExpBackgroundBrightness = 65
+            });
+
+            ResolutionPresets.Add(new ResolutionPreset()
+            {
+                Name = "1920x1080_Window_Medium",
+                Left = 596,
+                Right = 1333,
+                Height = 996,
+                ForegroundCount = 672,
+                WindowMode = true,
+                WindowModeXOffset = 10,
+                WindowModeYOffset = 33,
+                ExpForegroundBrightness = 720,
+                ExpBackgroundBrightness = 45
+            });
+
+            ResolutionPresets.Add(new ResolutionPreset()
+            {
+                Name = "1920x1080_Window_Bright",
+                Left = 596,
+                Right = 1333,
+                Height = 996,
+                ForegroundCount = 672,
+                WindowMode = true,
+                WindowModeXOffset = 10,
+                WindowModeYOffset = 33,
+                ExpForegroundBrightness = 720,
+                ExpBackgroundBrightness = 65
+            });
+        }
+
+        public double StartPercentage { get; set; } = 0.1337;
+        
+        //public double StartBarPercentage { get; set; } = 0;
+
+        public double StartBarPercentage => (int)(Percentage / 10) > (int)(StartPercentage / 10) ? 0 : (StartPercentage % 10) * 10;
 
         public double Percentage { get; set; } = 0;
 
@@ -96,22 +214,19 @@ namespace D2RExpMagnifier.Model
         public void ResetStats()
         {
             Percentage = 0;
+            StartPercentage = Percentage;
             RefreshExp();
             startTime = DateTime.Now;
             StartPercentage = Percentage;
-            StartBarPercentage = BarPercentage;
+            //StartBarPercentage = BarPercentage;
         }
 
         public void ResetBarPercentage()
         {
-            StartBarPercentage = BarPercentage;
+            //StartBarPercentage = BarPercentage;
         }
 
-        public bool WindowMode { get; set; } = false;
-
-
-        private int lastbar = 0;
-        private int expResetCounter = 0;
+        //public bool WindowMode { get; set; } = false;
 
         public void RefreshExp()
         {
@@ -141,25 +256,9 @@ namespace D2RExpMagnifier.Model
                 {
                     Status = true;
 
-                    if (StartPercentage == -1) ResetStats();
+                    if (StartPercentage == 0.1337) ResetStats();
 
-                    if (Bar != lastbar) ResetBarPercentage();
-                    lastbar = Bar;
-
-                    if (calculatedPercentage < Percentage)
-                    {
-                        expResetCounter++;
-                    }
-                    else
-                    {
-                        Percentage = calculatedPercentage;
-                        expResetCounter = 0;
-                    }
-
-                    if (expResetCounter > 5)
-                    {
-                        Percentage = calculatedPercentage;
-                    }
+                    Percentage = calculatedPercentage;
                 }
                 else
                 {
@@ -173,6 +272,11 @@ namespace D2RExpMagnifier.Model
 
             AddDebugText(debugString);
         }
+
+        public void TestLeftCoord() { SetCursorPos((int)(GetWindowOffset().x + SelectedResolution.Left), (int)(GetWindowOffset().y + SelectedResolution.Height)); }
+        public void TestRightCoord() { SetCursorPos((int)(GetWindowOffset().x + SelectedResolution.Right), (int)(GetWindowOffset().y + SelectedResolution.Height)); }
+        public void TestWindowLeftOffset() { SetCursorPos((int)(GetWindowOffset().x + SelectedResolution.WindowModeXOffset), (int)(GetWindowOffset().y + SelectedResolution.WindowModeYOffset)); }
+        public void TestWindowTopOffset() => TestWindowLeftOffset();
 
         public ResolutionPreset SelectedResolution { get; set; }
 
@@ -196,14 +300,12 @@ namespace D2RExpMagnifier.Model
 
         public bool Status { get; set; } = false;
 
-        private List<Color> GetColorsBetween(int startx, int endx, int y)
+
+        private (int x, int y) GetWindowOffset()
         {
-            List<Color> returnValue = new List<Color>();
+            (int, int) returnValue = (0, 0);
 
-            int xOffset = 0;
-            int yOffset = 0;
-
-            if(WindowMode)
+            if (SelectedResolution.WindowMode)
             {
                 Process[] processes = Process.GetProcessesByName("D2R");
 
@@ -213,11 +315,21 @@ namespace D2RExpMagnifier.Model
 
                     if (GetWindowRect(d2rHandle, ref windowPos))
                     {
-                        xOffset = windowPos.Left + 10;
-                        yOffset = windowPos.Top + 33;
+                        returnValue = (windowPos.Left + SelectedResolution.WindowModeXOffset,
+                            windowPos.Top + SelectedResolution.WindowModeYOffset);
                     }
                 }
             }
+
+            return returnValue;
+        }
+
+        private List<Color> GetColorsBetween(int startx, int endx, int y)
+        {
+            List<Color> returnValue = new List<Color>();
+
+            int xOffset = GetWindowOffset().x;
+            int yOffset = GetWindowOffset().y;
 
             try
             {
@@ -289,12 +401,12 @@ namespace D2RExpMagnifier.Model
 
         private bool IsExpForeground(Color color)
         {
-            return ((int)color.R + (int)color.G + (int)color.B) > 720;
+            return ((int)color.R + (int)color.G + (int)color.B) > SelectedResolution.ExpForegroundBrightness;
         }
 
         private bool IsExpBackground(Color color)
         {
-            return ((int)color.R + (int)color.G + (int)color.B) < 65;
+            return ((int)color.R + (int)color.G + (int)color.B) < SelectedResolution.ExpBackgroundBrightness;
         }
 
         private bool debugOn = false;
