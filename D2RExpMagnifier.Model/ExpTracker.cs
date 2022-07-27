@@ -183,16 +183,16 @@ namespace D2RExpMagnifier.Model
 
         public double Percentage { get; set; } = 0;
 
-        public double BarPercentage => Math.Round((Percentage % 10) * 1000) / 100;
+        public double BarPercentage => ((Percentage % 10) * 1000) / 100;
 
         public int Bar => ((int)(Percentage / 10)) + 1;
 
-        public double AddedBarPercentage => Math.Round((BarPercentage - StartBarPercentage) * 100) / 100;
-        public double AddedPercentage => Math.Round((Percentage - StartPercentage) * 100) / 100;
+        public double AddedBarPercentage => ((BarPercentage - StartBarPercentage) * 100) / 100;
+        public double AddedPercentage => ((Percentage - StartPercentage) * 100) / 100;
 
-        public double PercentPerHour => Math.Round(((Percentage - StartPercentage) / (DateTime.Now - startTime).TotalHours) * 10) / 10;
+        public double PercentPerHour => (((Percentage - StartPercentage) / (DateTime.Now - startTime).TotalHours) * 10) / 10;
 
-        public double PercentPerGame => GameCount > 0 ? Math.Round(((Percentage - StartPercentage) / GameCount * 10)) / 10 : 0;
+        public double PercentPerGame => GameCount > 0 ? (((Percentage - StartPercentage) / GameCount * 10)) / 10 : 0;
 
         public int GamesToLevel => CalculateGamesToLevel();
 
@@ -285,7 +285,7 @@ namespace D2RExpMagnifier.Model
                 backgroundCount = getCheckPixels.Where(o => IsExpBackground(o)).Count();
                 debugString += foregroundCount.ToString();
 
-                double calculatedPercentage = Math.Round(((double)foregroundCount / SelectedResolution.ForegroundCount) * 1000 * 100) / 1000;
+                double calculatedPercentage = (((double)foregroundCount / SelectedResolution.ForegroundCount) * 1000 * 100) / 1000;
                 unknownCount = getCheckPixels.Count - (foregroundCount + backgroundCount);
 
                 if(unknownCount < 125)

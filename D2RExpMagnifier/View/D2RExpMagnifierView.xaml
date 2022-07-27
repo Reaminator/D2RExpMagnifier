@@ -218,7 +218,7 @@
                         </Grid>
                     </StackPanel>
 
-                    <StackPanel Orientation="Vertical">
+                    <StackPanel Orientation="Vertical" Margin="20 0 0 0">
                         <Grid>
                             <TextBlock Margin="2 2 0 0" Text="{Binding TotalGameTime}" FontSize="20" HorizontalAlignment="Center" FontWeight="Bold" Foreground="Black"/>
                             <TextBlock Margin="0" Text="{Binding TotalGameTime}" FontSize="20" HorizontalAlignment="Center" FontWeight="Bold" Foreground="{Binding Status, Converter={StaticResource StatusToTextColorConverter}}"/>
@@ -230,7 +230,7 @@
                     </StackPanel>
                 </StackPanel>
 
-                <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
+                <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Margin="10 0 0 0">
                     <StackPanel Orientation="Vertical">
                         <Grid>
                             <TextBlock Margin="2 2 0 0" Text="{Binding GameTime}" FontSize="20" HorizontalAlignment="Center" FontWeight="Bold" Foreground="Black"/>

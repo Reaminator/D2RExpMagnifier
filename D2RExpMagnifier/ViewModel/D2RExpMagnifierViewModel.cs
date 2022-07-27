@@ -203,19 +203,24 @@ namespace D2RExpMagnifier.UI.ViewModel
         }
 
         public List<ResolutionPreset> ResolutionPresets => Model.ResolutionPresets;
-        public double Percentage => Model.Percentage;
-        public double BarPercentage => Model.BarPercentage;
+        public double Percentage => round(Model.Percentage, 1);
+        public double BarPercentage => round(Model.BarPercentage, 0);
         public int Bar => Model.Bar;
-        public double AddedPercentage => Model.AddedPercentage;
+        public double AddedPercentage => round(Model.AddedPercentage, 1);
         public List<Screen> Screens => Model.Screens;
-        public double StartPercentage => Model.StartPercentage;
-        public double AddedBarPercentage => Model.AddedBarPercentage;
-        public double StartBarPercentage => Model.StartBarPercentage;
+        public double StartPercentage => round(Model.StartPercentage, 1);
+        public double AddedBarPercentage => round(Model.AddedBarPercentage, 0);
+        public double StartBarPercentage => round(Model.StartBarPercentage, 0);
         public TimeSpan TimeToLevel => Model.TimeToLevel;
         public TimeSpan TimeToBar => Model.TimeToBar;
-        public double PercentPerHour => Model.PercentPerHour;
+        public double PercentPerHour => round(Model.PercentPerHour,2);
 
-        public double PercentPerGame => Model.PercentPerGame;
+        public double PercentPerGame => round(Model.PercentPerGame,2);
+
+        private double round(double input, int decimals)
+        {
+            return Math.Round(input * Math.Pow(10, decimals)) / Math.Pow(10, decimals);
+        }
 
         public int GamesToLevel => Model.GamesToLevel;
 
