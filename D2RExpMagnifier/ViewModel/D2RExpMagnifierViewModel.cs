@@ -130,6 +130,9 @@ namespace D2RExpMagnifier.UI.ViewModel
             RaisePropertyChanged(nameof(DebugText));
             RaisePropertyChanged(nameof(StartPercentage));
             RaisePropertyChanged(nameof(StartBarPercentage));
+            RaisePropertyChanged(nameof(GameTime));
+            RaisePropertyChanged(nameof(AverageGameTime));
+            RaisePropertyChanged(nameof(GameCount));
         }
 
         private void CloseApplication(object parameter)
@@ -151,6 +154,24 @@ namespace D2RExpMagnifier.UI.ViewModel
             {
                 SelectedWidth = windowWidths[windowWidths.IndexOf(SelectedWidth) + 1];
             }
+        }
+
+        public int GameCount => Model.GameCount;
+
+        public string GameTime => Status ? String.Format("{0}:{1}:{2}", pad(Model.GameTime.Hours), pad(Model.GameTime.Minutes), pad(Model.GameTime.Seconds)) : "?";
+
+        public string AverageGameTime => String.Format("{0}:{1}:{2}", pad(Model.AverageGameTime.Hours), pad(Model.AverageGameTime.Minutes), pad(Model.AverageGameTime.Seconds));
+
+        private string pad(int number)
+        {
+            string returnValue = number.ToString();
+
+            while(returnValue.Length < 2)
+            {
+                returnValue = string.Format("0{0}", returnValue);
+            }
+
+            return returnValue;
         }
 
         private void RaisePropertyChanged([CallerMemberName] string memberName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(memberName));

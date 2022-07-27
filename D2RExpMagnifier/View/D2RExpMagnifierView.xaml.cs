@@ -42,7 +42,7 @@ namespace D2RExpMagnifier
             }
             else
             {
-                this.DragMove();
+                if(e.ButtonState == MouseButtonState.Pressed) this.DragMove();
             }
         }
     }

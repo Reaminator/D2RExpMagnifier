@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
+using System.Windows.Media;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -17,12 +17,13 @@ namespace D2RExpMagnifier.UI.ValueConverter
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            WindowStyle returnValue = WindowStyle.SingleBorderWindow;
+            Brush returnValue = Brushes.White;
 
             if (value is bool boolValue && boolValue)
             {
-                returnValue = WindowStyle.None;
+                returnValue = Brushes.Transparent;
             }
+
 
             return returnValue;
         }

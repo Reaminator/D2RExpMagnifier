@@ -228,6 +228,25 @@ namespace D2RExpMagnifier.Model
 
         //public bool WindowMode { get; set; } = false;
 
+        private int badScanCount = 0;
+
+        List<TimeSpan> gameTimes = new List<TimeSpan>();
+
+        private TimeSpan TotalGameTime
+        {
+            get
+            {
+                TimeSpan returnValue = new TimeSpan(0);
+                gameTimes.ForEach(o => returnValue += o);
+                return returnValue;
+            }
+   
+        }
+
+        public TimeSpan AverageGameTime => gameTimes.Count > 1 ? TotalGameTime / (gameTimes.Count-1) : new TimeSpan(0);
+
+        public int GameCount => gameTimes.Count;
+
         public void RefreshExp()
         {
             int? startX = GetLeftBound();
@@ -254,6 +273,7 @@ namespace D2RExpMagnifier.Model
 
                 if(unknownCount < 75)
                 {
+                    badScanCount = 0;
                     Status = true;
 
                     if (StartPercentage == 0.1337) ResetStats();
@@ -262,11 +282,17 @@ namespace D2RExpMagnifier.Model
                 }
                 else
                 {
+                    badScanCount++;
+                    if (badScanCount == 5) gameTimes.Add(GameTime - new TimeSpan(0, 0, 5));
+                    if (badScanCount > 5) lastBadScan = DateTime.Now;
                     Status = false;
                 }
             }
             else
             {
+                badScanCount++;
+                if (badScanCount == 5) gameTimes.Add(GameTime - new TimeSpan(0, 0, 5));
+                if (badScanCount > 5) lastBadScan = DateTime.Now;
                 Status = false;
             }
 
@@ -299,6 +325,10 @@ namespace D2RExpMagnifier.Model
         }
 
         public bool Status { get; set; } = false;
+
+        private DateTime lastBadScan = DateTime.Now;
+        public TimeSpan GameTime => DateTime.Now - lastBadScan;
+            
 
 
         private (int x, int y) GetWindowOffset()
