@@ -192,9 +192,25 @@ namespace D2RExpMagnifier.Model
 
         public double PercentPerHour => Math.Round(((Percentage - StartPercentage) / (DateTime.Now - startTime).TotalHours) * 10) / 10;
 
+        public double PercentPerGame => GameCount > 0 ? Math.Round(((Percentage - StartPercentage) / GameCount * 10)) / 10 : 0;
+
+        public int GamesToLevel => CalculateGamesToLevel();
+
         public TimeSpan TimeToLevel => CalculateTimeToLevel();
 
         public TimeSpan TimeToBar => TimeSpan.FromHours((100 - BarPercentage) / (0.01 + (PercentPerHour * 10)));
+
+        private int CalculateGamesToLevel()
+        {
+            int returnValue = 99999;
+
+            if(PercentPerGame > 0)
+            {
+                returnValue = (int)((100 - Percentage) / PercentPerGame);
+            }
+
+            return returnValue;
+        }
 
         private TimeSpan CalculateTimeToLevel()
         {
@@ -213,6 +229,7 @@ namespace D2RExpMagnifier.Model
 
         public void ResetStats()
         {
+            gameTimes.Clear();
             Percentage = 0;
             StartPercentage = Percentage;
             RefreshExp();
@@ -232,7 +249,7 @@ namespace D2RExpMagnifier.Model
 
         List<TimeSpan> gameTimes = new List<TimeSpan>();
 
-        private TimeSpan TotalGameTime
+        public TimeSpan TotalGameTime
         {
             get
             {
@@ -243,7 +260,7 @@ namespace D2RExpMagnifier.Model
    
         }
 
-        public TimeSpan AverageGameTime => gameTimes.Count > 1 ? TotalGameTime / (gameTimes.Count-1) : new TimeSpan(0);
+        public TimeSpan AverageGameTime => gameTimes.Count > 0 ? TotalGameTime / (gameTimes.Count) : new TimeSpan(0);
 
         public int GameCount => gameTimes.Count;
 
@@ -271,7 +288,7 @@ namespace D2RExpMagnifier.Model
                 double calculatedPercentage = Math.Round(((double)foregroundCount / SelectedResolution.ForegroundCount) * 1000 * 100) / 1000;
                 unknownCount = getCheckPixels.Count - (foregroundCount + backgroundCount);
 
-                if(unknownCount < 75)
+                if(unknownCount < 125)
                 {
                     badScanCount = 0;
                     Status = true;
@@ -283,16 +300,16 @@ namespace D2RExpMagnifier.Model
                 else
                 {
                     badScanCount++;
-                    if (badScanCount == 5) gameTimes.Add(GameTime - new TimeSpan(0, 0, 5));
-                    if (badScanCount > 5) lastBadScan = DateTime.Now;
+                    if (badScanCount == 3) gameTimes.Add(GameTime - new TimeSpan(0, 0, 3));
+                    if (badScanCount >= 3) lastBadScan = DateTime.Now;
                     Status = false;
                 }
             }
             else
             {
                 badScanCount++;
-                if (badScanCount == 5) gameTimes.Add(GameTime - new TimeSpan(0, 0, 5));
-                if (badScanCount > 5) lastBadScan = DateTime.Now;
+                if (badScanCount == 3) gameTimes.Add(GameTime - new TimeSpan(0, 0, 3));
+                if (badScanCount >= 3) lastBadScan = DateTime.Now;
                 Status = false;
             }
 

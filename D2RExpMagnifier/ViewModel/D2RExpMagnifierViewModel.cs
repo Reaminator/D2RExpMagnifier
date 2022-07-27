@@ -133,6 +133,9 @@ namespace D2RExpMagnifier.UI.ViewModel
             RaisePropertyChanged(nameof(GameTime));
             RaisePropertyChanged(nameof(AverageGameTime));
             RaisePropertyChanged(nameof(GameCount));
+            RaisePropertyChanged(nameof(PercentPerGame));
+            RaisePropertyChanged(nameof(GamesToLevel));
+            RaisePropertyChanged(nameof(TotalGameTime));
         }
 
         private void CloseApplication(object parameter)
@@ -157,6 +160,8 @@ namespace D2RExpMagnifier.UI.ViewModel
         }
 
         public int GameCount => Model.GameCount;
+
+        public string TotalGameTime => String.Format("{0}:{1}:{2}", pad(Model.TotalGameTime.Hours), pad(Model.TotalGameTime.Minutes), pad(Model.TotalGameTime.Seconds));
 
         public string GameTime => Status ? String.Format("{0}:{1}:{2}", pad(Model.GameTime.Hours), pad(Model.GameTime.Minutes), pad(Model.GameTime.Seconds)) : "?";
 
@@ -209,6 +214,11 @@ namespace D2RExpMagnifier.UI.ViewModel
         public TimeSpan TimeToLevel => Model.TimeToLevel;
         public TimeSpan TimeToBar => Model.TimeToBar;
         public double PercentPerHour => Model.PercentPerHour;
+
+        public double PercentPerGame => Model.PercentPerGame;
+
+        public int GamesToLevel => Model.GamesToLevel;
+
         public string DebugText => Model.DebugText;
 
         //UI Relayed Methods
